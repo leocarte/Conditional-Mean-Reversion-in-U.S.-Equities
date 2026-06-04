@@ -1,0 +1,144 @@
+# Active project config for the cleaned submission repository.
+# Compustat remains disabled by default here; dedicated Compustat runners enable
+# it in-memory for controlled reruns.
+
+seeds: [1, 2, 3]
+
+data:
+  panel_path: "data/processed/model_panel.parquet"
+  target_col: "target_ret_fwd_1m"
+  robustness_target_col: "target_excess_ret_fwd_1m"
+  date_col: "date"
+  permno_col: "permno"
+  ret_col: "ret"
+  market_col: "sprtrn"
+
+  use_compustat: false
+  use_regime_features: false
+  use_jkp_raw_factors: false
+
+  raw_dir: ${oc.env:MLFINANCE_RAW_DIR,data/raw}
+  processed_dir: ${oc.env:MLFINANCE_PROCESSED_DIR,data/processed}
+  paths:
+    crsp_monthly: ${data.raw_dir}/monthly_crsp.parquet
+    compustat_quarterly: ${data.raw_dir}/CompFirmCharac.parquet
+    jkp_factors: ${data.raw_dir}/[usa]_[all_factors]_[monthly]_[vw_cap].parquet
+
+splits:
+  locked:
+    train_start: "1985-01-31"
+    train_end: "2009-12-31"
+    val_start: "2010-01-31"
+    val_end: "2016-12-31"
+    test_start: "2017-01-31"
+    test_end: "2024-12-31"
+  walk_forward:
+    train_years: 20
+    val_years: 5
+    test_years: 1
+    expanding: true
+
+features:
+  return_features:
+    enabled: true
+    min_history_months: 12
+  compustat_features:
+    enabled: false
+    conservative_lag_months: 6
+    max_missing_rate: 0.70
+  regime_features:
+    enabled: false
+    include_jkp_summaries: false
+
+# Used by the baseline runner only. The benchmark runners select their own
+# return-only model families explicitly and still share this same config file.
+active_models:
+  - zero
+  - reversal
+  - zscore_reversal
+  - momentum
+
+models:
+  ridge:
+    shrinkage_grid: [1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0, 10.0, 100.0]
+  elastic_net:
+    alpha_grid: [1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1, 1.0, 10.0]
+    l1_ratio_grid: [0.1, 0.5, 0.9]
+    max_iter: 10000
+  lgbm:
+    n_estimators: 1000
+    max_depth: 6
+    learning_rate: 0.05
+    early_stopping_rounds: 50
+  xgb:
+    # GBDT grid for the nonlinear benchmark runner.
+    n_estimators_grid: [200, 500]
+    max_depth_grid: [3, 6]
+    learning_rate: 0.05
+    subsample: 0.8
+    colsample_bytree: 0.8
+    reg_lambda: 1.0
+    reg_alpha: 0.0
+  mlp:
+    hidden_dims: [256, 128, 64]
+    activation: "relu"
+    dropout: 0.1
+    lr: 0.001
+    wd: 0.0001
+    batch_size: 4096
+    epochs: 30
+    patience: 5
+    # Additional MLP search knobs consumed by `mlfinance.run.nonlinear_benchmarks`.
+    dropout_grid: [0.1, 0.2]
+    n_seeds: 3
+    use_bf16: false
+    use_layer_norm: true
+
+portfolio:
+  n_buckets: 10
+  long_bucket: 10
+  short_bucket: 1
+  weighting: "EW"
+  gross_leverage: 2.0
+  rebalance_frequency: "monthly"
+  cutoffs: [5, 10, 20]
+
+costs:
+  model: "flat_bps"
+  main_bps: 10
+  bps_grid: [0, 5, 10, 25, 50]
+
+eval:
+  predictive_metrics: ["rmse", "mae", "oos_r2", "pearson_ic", "spearman_ic"]
+  portfolio_metrics: ["ann_return", "ann_vol", "sharpe", "sortino", "max_drawdown", "calmar", "turnover", "alpha", "beta"]
+  newey_west_lag_primary: 11
+  benchmark_col: "sprtrn"
+
+universe:
+  # Cost/universe robustness audit. Each filter runs only
+  # if its panel column exists; otherwise it is skipped and reported, never
+  # faked. The provided Monthly CRSP ships without prc/shrout/shrcd/exchcd, so
+  # today only `sic_exclude` (and the optional min-count guard) is active. The
+  # `tradable` variant intentionally documents infeasible filters and therefore
+  # no-ops on the current data.
+  variants:
+    all: {}
+    ex_financials:
+      sic_exclude: [[6000, 6999]]
+    ex_fin_utils:
+      sic_exclude: [[6000, 6999], [4900, 4949]]
+    tradable:
+      price_min: 5.0
+      shrcd_keep: [10, 11]
+      exchcd_keep: [1, 2, 3]
+  min_stocks_per_month: 0
+
+runtime:
+  rebuild_panel: true
+
+paths:
+  predictions: "data/outputs/predictions"
+  backtests: "data/outputs/backtests"
+  metrics: "data/outputs/metrics"
+  report_tables: "report/tables"
+  report_figures: "report/figures"
