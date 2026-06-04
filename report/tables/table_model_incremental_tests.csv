@@ -1,0 +1,4 @@
+pair,strategy_a,strategy_b,n_months,mean_diff_monthly,mean_diff_annualized,nw_tstat_diff,baseline_source
+flow_compustat__mlp - return_only__mlp,flow_compustat__mlp,return_only__mlp,95,0.0075396319308599,0.0904755831703199,2.5295720157305865,walk_forward
+flow_compustat__xgboost - return_only__xgboost,flow_compustat__xgboost,return_only__xgboost,95,0.0027026070747754,0.0324312848973052,0.9043146621636152,walk_forward
+flow_compustat__mlp - flow_compustat__xgboost,flow_compustat__mlp,flow_compustat__xgboost,95,8.714879637265632e-05,0.0010457855564718,0.0299304159360176,walk_forward

@@ -1,0 +1,7 @@
+pair,strategy_a,strategy_b,n_months,mean_diff_monthly,mean_diff_annualized,nw_tstat_diff,baseline_source
+flow_compustat__xgboost - reversal,flow_compustat__xgboost,reversal,95,0.0165175729523826,0.1982108754285924,4.282717962677472,classical_baseline
+flow_compustat__xgboost - zscore_reversal,flow_compustat__xgboost,zscore_reversal,95,0.0165175729523826,0.1982108754285924,4.282717962677472,classical_baseline
+flow_compustat__mlp - reversal,flow_compustat__mlp,reversal,95,0.0166047217487553,0.1992566609850642,3.340145522368171,classical_baseline
+flow_compustat__mlp - zscore_reversal,flow_compustat__mlp,zscore_reversal,95,0.0166047217487553,0.1992566609850642,3.340145522368171,classical_baseline
+flow_compustat__mlp - momentum,flow_compustat__mlp,momentum,95,0.0052954286783673,0.0635451441404085,0.7371333185578933,classical_baseline
+flow_compustat__xgboost - momentum,flow_compustat__xgboost,momentum,95,0.0052082798819947,0.0624993585839366,0.5576323153754125,classical_baseline

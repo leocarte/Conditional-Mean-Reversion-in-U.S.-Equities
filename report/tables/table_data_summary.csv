@@ -1,0 +1,2 @@
+sample_start,sample_end,stock_months,unique_stocks,avg_stocks_per_month,n_features,target_col,target_mean,target_vol
+1984-01-31,2024-11-30,3646731,33884,7427.150712830958,15,target_ret_fwd_1m,0.008501937214178945,0.18392109441669088

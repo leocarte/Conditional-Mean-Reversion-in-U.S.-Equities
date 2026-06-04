@@ -1,0 +1,132 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mlfinance_report}[2026/05/29 MLfinance final report style]
+
+\RequirePackage[a4paper,margin=0.82in,top=0.78in,bottom=0.9in]{geometry}
+\IfFileExists{microtype.sty}{\RequirePackage{microtype}}{}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[american]{babel}
+\IfFileExists{newtxtext.sty}{\RequirePackage{newtxtext,newtxmath}}{\RequirePackage{lmodern}}
+\RequirePackage{amsmath}
+\RequirePackage{graphicx}
+\RequirePackage{booktabs}
+\RequirePackage{array}
+\RequirePackage{stfloats}
+\RequirePackage{caption}
+\RequirePackage{xcolor}
+\RequirePackage{enumitem}
+\RequirePackage[hidelinks]{hyperref}
+
+\captionsetup{
+  font=small,
+  labelfont=bf,
+  justification=raggedright,
+  singlelinecheck=false,
+  skip=4pt
+}
+
+\setlist[itemize]{
+  leftmargin=*,
+  topsep=2pt,
+  itemsep=1pt,
+  parsep=0pt,
+  partopsep=0pt
+}
+
+\setlength{\parindent}{0.125in}
+\setlength{\parskip}{0pt}
+\setlength{\abovedisplayskip}{7pt plus 2pt minus 5pt}
+\setlength{\belowdisplayskip}{7pt plus 2pt minus 5pt}
+\setlength{\abovedisplayshortskip}{0pt plus 3pt}
+\setlength{\belowdisplayshortskip}{4pt plus 3pt minus 3pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
+
+\setlength\columnsep{0.24in}
+\setlength\footskip{20pt}
+
+\raggedbottom
+\twocolumn
+\sloppy
+
+\newlength\titlebox
+\setlength\titlebox{1.75in}
+
+\def\maketitle{\par
+  \begingroup
+  \twocolumn[\@maketitle] \@thanks
+  \endgroup
+  \let\maketitle\relax
+  \let\@maketitle\relax
+  \gdef\@thanks{}
+  \gdef\@author{}
+  \gdef\@title{}
+  \let\thanks\relax
+}
+
+\def\@maketitle{%
+  \setbox\@tempboxa=\vbox{%
+    \linewidth\hsize
+    \centering
+    {\LARGE\bfseries \@title \par}%
+    \vskip 0.9em%
+    \@author
+    \vskip 14pt\relax%
+  }%
+  \ifdim\ht\@tempboxa<\titlebox
+    \vbox to\titlebox{\unvbox\@tempboxa\vfill}%
+  \else
+    \box\@tempboxa
+  \fi
+}
+
+\renewenvironment{abstract}
+{
+  \centerline{\normalsize\bfseries Abstract}
+  \vskip 0.75em
+  \begin{list}{}{%
+      \setlength{\leftmargin}{0.15in}%
+      \setlength{\rightmargin}{0.15in}%
+      \setlength{\topsep}{0pt}%
+      \setlength{\partopsep}{0pt}%
+      \setlength{\itemsep}{0pt}%
+      \setlength{\parsep}{8pt}%
+    }\item\relax
+      \small
+}
+{\par\end{list}}
+
+\def\section{\@startsection{section}{1}{\z@}%
+  {-8pt plus -3pt minus 0pt}%
+  {4pt plus 2pt minus 0pt}%
+  {\Large\bfseries\centering}}
+
+\def\subsection{\@startsection{subsection}{2}{\z@}%
+  {-9pt plus -3pt minus 0pt}%
+  {3pt plus 2pt minus 0pt}%
+  {\large\bfseries\raggedright}}
+
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {-8pt plus -2pt minus 0pt}%
+  {2pt plus 1pt minus 0pt}%
+  {\normalsize\bfseries\raggedright}}
+
+\setcounter{secnumdepth}{0}
+
+\renewcommand\normalsize{\@setfontsize\normalsize{11.15}{13.45}}
+\renewcommand\small{\@setfontsize\small{10}{11.6}}
+\renewcommand\footnotesize{\@setfontsize\footnotesize{9.2}{10.6}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{8.45}{9.6}}
+\renewcommand\tiny{\@setfontsize\tiny{7.4}{8.4}}
+\renewcommand\large{\@setfontsize\large{12.4}{14.6}}
+\renewcommand\Large{\@setfontsize\Large{13.5}{16.2}}
+\renewcommand\LARGE{\@setfontsize\LARGE{15.5}{18.4}}
+\normalsize
+
+\DeclareRobustCommand{\code}[1]{\texttt{#1}}
+\newcommand{\source}[1]{\textit{Source:} #1.}
+
+\endinput
